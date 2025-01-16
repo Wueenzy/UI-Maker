@@ -10,7 +10,8 @@ private:
     vector<string> tables;
     vector<int> tWidth;
     int width = 10, height = 1;
-    void _printRow(string, string);
+    void _printRow(string, string, int);
+    void _printTextRow(string, string);
 public:
     Table();
     void tableSave(string, int);
@@ -30,10 +31,9 @@ void Table::tableSave(string str, int width) {
     tWidth.push_back(width);
 }
 
-void Table::_printRow(string delimiter, string fill) {
+void Table::_printRow(string delimiter, string fill, int size = 0) {
   count = 0;
   cout << delimiter;
-  int size = 0;
   for (string str : tables) {
     for (int i = 0; i < tWidth[size]; i++) {
       count++;
@@ -44,26 +44,30 @@ void Table::_printRow(string delimiter, string fill) {
   }
 }
 
+void Table::_printTextRow(string delimiter, string fill) {
+    int size = 0;
+    for (string str : tables) {
+        int bufferWidth = tWidth[size] - str.length();
+        cout << delimiter;
+        for (int j = 0; j < (int)bufferWidth/2; j++) {
+            cout << fill;
+        }
+        cout << str;
+        for (int j = 0; j < bufferWidth - (int)bufferWidth/2; j++) {
+            cout << fill;
+        }
+        size++;
+    }
+    cout << delimiter;
+}
+
 void Table::tableEndl() {
     int size = 0;
     _printRow("+", "-");
     cout << endl;
     for (int i = 0; i < height; i++) {
         if (i == (int)height/2) {
-            size = 0;
-            for (string str : tables) {
-                int bufferWidth = tWidth[size] - str.length();
-                cout << "|";
-                for (int j = 0; j < (int)bufferWidth/2; j++) {
-                    cout << ' ';
-                }
-                cout << str;
-                for (int j = 0; j < bufferWidth - (int)bufferWidth/2; j++) {
-                    cout << ' ';
-                }
-                size++;
-            }
-            cout << '|';
+            _printTextRow("|", " ");
             cout << endl;
         }else {
             _printRow("|", " ");
@@ -101,43 +105,14 @@ void Table::tableCont() {
 
     for (int i = 0; i < height; i++) {
         if (i == (int)height/2) {
-            size = 0;
-            for (string str : tables) {
-                int bufferWidth = tWidth[size] - str.length();
-                cout << "|";
-                for (int j = 0; j < (int)bufferWidth/2; j++) {
-                    cout << ' ';
-                }
-                cout << str;
-                for (int j = 0; j < bufferWidth - (int)bufferWidth/2; j++) {
-                    cout << ' ';
-                }
-                size++;
-            }
-            cout << '|';
+            _printTextRow("|", " ");
             cout << endl;
         }else {
-            size = 0;
-            for (string str : tables) {
-                cout << "|";
-                for (int j = 0; j < tWidth[size]; j++) {
-                    cout << ' ';
-                }
-                size++;
-            }
-            cout << "|";
+            _printRow("|", " ");
             cout << endl;
         }
     }
-    cout << "+";
-    size = 0;
-    for (string str : tables) {
-        for (int i = 0; i < tWidth[find(tables.begin(), tables.end(), str) - tables.begin()]; i++) {
-            cout << '-';
-        }
-        cout << "+";
-        size++;
-    }
+    _printRow("+", "-");
     beforeSize = tWidth.size();
     tables.clear();
     tWidth.clear();
