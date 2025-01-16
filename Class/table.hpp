@@ -10,6 +10,7 @@ private:
     vector<string> tables;
     vector<int> tWidth;
     int width = 10, height = 1;
+    void _printRow(string, string);
 public:
     Table();
     void tableSave(string, int);
@@ -29,18 +30,23 @@ void Table::tableSave(string str, int width) {
     tWidth.push_back(width);
 }
 
-void Table::tableEndl() {
-    count = 0;
-    cout << "+";
-    int size = 0;
-    for (string str : tables) {
-        for (int i = 0; i < tWidth[size]; i++) {
-            count++;
-            cout << '-';
-        }
-        cout << "+";
-        size++;
+void Table::_printRow(string delimiter, string fill) {
+  count = 0;
+  cout << delimiter;
+  int size = 0;
+  for (string str : tables) {
+    for (int i = 0; i < tWidth[size]; i++) {
+      count++;
+      cout << fill;
     }
+    cout << delimiter;
+    size++;
+  }
+}
+
+void Table::tableEndl() {
+    int size = 0;
+    _printRow("+", "-");
     cout << endl;
     for (int i = 0; i < height; i++) {
         if (i == (int)height/2) {
@@ -60,27 +66,11 @@ void Table::tableEndl() {
             cout << '|';
             cout << endl;
         }else {
-            size = 0;
-            for (string str : tables) {
-                cout << "|";
-                for (int j = 0; j < tWidth[size]; j++) {
-                    cout << ' ';
-                }
-                size++;
-            }
-            cout << "|";
+            _printRow("|", " ");
             cout << endl;
         }
     }
-    cout << "+";
-    size = 0;
-    for (string str : tables) {
-        for (int i = 0; i < tWidth[size]; i++) {
-            cout << '-';
-        }
-        cout << "+";
-        size++;
-    }
+    _printRow("+", "-");
     beforeSize = tWidth.size();
     tables.clear();
     tWidth.clear();
